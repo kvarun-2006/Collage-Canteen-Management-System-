@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function loadMenu() {
     console.log('loadMenu called');
     // alert('Loading menu...'); // Uncomment for visible feedback if console is not accessible
-    fetch('/CanteenManagementSystem-1.0-SNAPSHOT/menu')
+    fetch('/CanteenManagementSystem/menu')
         .then(response => {
             console.log('Response received:', response.status);
             if (!response.ok) {

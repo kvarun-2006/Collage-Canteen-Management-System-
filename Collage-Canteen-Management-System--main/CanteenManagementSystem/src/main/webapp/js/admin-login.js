@@ -10,7 +10,7 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
         password: password
     };
 
-    fetch('/CanteenManagementSystem-1.0-SNAPSHOT/login', {
+    fetch('/CanteenManagementSystem/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -19,13 +19,15 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
     })
         .then(response => response.json())
         .then(data => {
+            console.log('Login response data:', data);
             const messageElement = document.getElementById('login-message');
             if (data.success) {
                 messageElement.style.color = 'green';
                 messageElement.textContent = data.message;
-                // Redirect to admin dashboard
+                console.log('Redirecting to:', data.redirect);
+                // Redirect to dashboard based on role
                 setTimeout(() => {
-                    window.location.href = 'admin-dashboard.html';
+                    window.location.href = data.redirect;
                 }, 1000);
             } else {
                 messageElement.style.color = 'red';

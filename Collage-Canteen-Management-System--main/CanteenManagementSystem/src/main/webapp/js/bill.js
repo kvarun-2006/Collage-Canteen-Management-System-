@@ -1,5 +1,5 @@
 // Bill functionality
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('orderId');
 
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadBill(orderId) {
-    fetch(`/bill?orderId=${orderId}`)
+    fetch(`/CanteenManagementSystem/bill?orderId=${orderId}`)
         .then(response => response.json())
         .then(data => {
             const billContainer = document.getElementById('bill-container');

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadMenuItems() {
-    fetch('/CanteenManagementSystem-1.0-SNAPSHOT/menu')
+    fetch('/CanteenManagementSystem/menu')
         .then(response => response.json())
         .then(data => {
             const menuItemsList = document.getElementById('menu-items-list');
@@ -42,7 +42,7 @@ function addMenuItem() {
     formData.append('name', name);
     formData.append('price', price);
 
-    fetch('/CanteenManagementSystem-1.0-SNAPSHOT/menu', {
+    fetch('/CanteenManagementSystem/menu', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -76,7 +76,7 @@ function editMenuItem(id, currentName, currentPrice) {
         formData.append('name', newName);
         formData.append('price', newPrice);
 
-        fetch('/CanteenManagementSystem-1.0-SNAPSHOT/menu', {
+        fetch('/CanteenManagementSystem/menu', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -105,7 +105,7 @@ function deleteMenuItem(id) {
         formData.append('action', 'delete');
         formData.append('id', id);
 
-        fetch('/CanteenManagementSystem-1.0-SNAPSHOT/menu', {
+        fetch('/CanteenManagementSystem/menu', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadReport() {
-    fetch('/CanteenManagementSystem-1.0-SNAPSHOT/report')
+    fetch('/CanteenManagementSystem/report')
         .then(response => response.json())
         .then(data => {
             const reportContainer = document.getElementById('report-container');

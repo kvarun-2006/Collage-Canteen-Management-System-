@@ -39,7 +39,7 @@ public class OrderServlet extends HttpServlet {
 
             while (rs.next()) {
                 Order order = new Order(rs.getInt("order_id"), rs.getString("customer_name"),
-                                      rs.getBigDecimal("total"), rs.getTimestamp("time"));
+                        rs.getBigDecimal("total"), rs.getTimestamp("time"));
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -59,17 +59,63 @@ public class OrderServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
+        String action = request.getParameter("action");
+        Map<String, Object> result = new HashMap<>();
+
+        // Handle order completion
+        if ("complete".equals(action)) {
+            String orderIdParam = request.getParameter("orderId");
+            if (orderIdParam == null) {
+                result.put("success", false);
+                result.put("message", "Order ID is required");
+                response.getWriter().write(objectMapper.writeValueAsString(result));
+                return;
+            }
+
+            try (Connection conn = DatabaseConnection.getConnection()) {
+                conn.setAutoCommit(false);
+                int orderId = Integer.parseInt(orderIdParam);
+
+                // Delete order items first (foreign key constraint)
+                String deleteItemsSql = "DELETE FROM order_items WHERE order_id = ?";
+                PreparedStatement deleteItemsStmt = conn.prepareStatement(deleteItemsSql);
+                deleteItemsStmt.setInt(1, orderId);
+                deleteItemsStmt.executeUpdate();
+
+                // Delete order
+                String deleteOrderSql = "DELETE FROM orders WHERE order_id = ?";
+                PreparedStatement deleteOrderStmt = conn.prepareStatement(deleteOrderSql);
+                deleteOrderStmt.setInt(1, orderId);
+                int rowsAffected = deleteOrderStmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    conn.commit();
+                    result.put("success", true);
+                    result.put("message", "Order completed and removed successfully");
+                } else {
+                    conn.rollback();
+                    result.put("success", false);
+                    result.put("message", "Order not found");
+                }
+            } catch (SQLException | NumberFormatException e) {
+                result.put("success", false);
+                result.put("message", "Error completing order: " + e.getMessage());
+            }
+
+            response.getWriter().write(objectMapper.writeValueAsString(result));
+            return;
+        }
+
+        // Handle order placement (existing logic)
         String customerName = request.getParameter("customerName");
         String cartData = request.getParameter("cart");
-
-        Map<String, Object> result = new HashMap<>();
 
         try (Connection conn = DatabaseConnection.getConnection()) {
             conn.setAutoCommit(false);
 
             // Parse cart data (assuming JSON format: [{"id":1,"quantity":2},...])
             List<Map<String, Object>> cartItems = objectMapper.readValue(cartData,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
 
             BigDecimal total = BigDecimal.ZERO;
 

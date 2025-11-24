@@ -95,7 +95,7 @@ function placeOrder() {
         cart: JSON.stringify(cart)
     };
 
-    fetch('/CanteenManagementSystem-1.0-SNAPSHOT/order', {
+    fetch('/CanteenManagementSystem/order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
