@@ -57,9 +57,40 @@
                 </div>
             </div>
         </div>
+
+        <!-- Edit Item Modal -->
+        <div id="edit-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal()">&times;</span>
+                <h2>✏️ Edit Menu Item</h2>
+                <form id="edit-item-form">
+                    <input type="hidden" id="edit-item-id">
+                    <div class="form-group">
+                        <label for="edit-item-name">
+                            <span class="label-icon">📝</span>
+                            Item Name
+                        </label>
+                        <input type="text" id="edit-item-name" required minlength="2" maxlength="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-item-price">
+                            <span class="label-icon">💰</span>
+                            Price (₹)
+                        </label>
+                        <input type="number" id="edit-item-price" step="0.01" min="1" max="9999" required>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-primary">💾 Save Changes</button>
+                        <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </main>
 
-    <script src="../js/manage-menu.js?v=2"></script>
+    <script src="../js/manage-menu.js?v=3"></script>
 </body>
 
 </html>
