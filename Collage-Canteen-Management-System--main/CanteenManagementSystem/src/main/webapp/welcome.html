@@ -7,6 +7,11 @@
     <title>College Canteen Management System</title>
     <link rel="stylesheet" href="../css/styles.css">
     <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+        }
+
         .landing-container {
             min-height: 100vh;
             display: flex;
@@ -14,35 +19,117 @@
             justify-content: center;
             align-items: center;
             padding: var(--spacing-lg);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background Circles */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            right: -50px;
+            animation-delay: 5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            right: 10%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-30px) scale(1.1);
+            }
         }
 
         .landing-content {
             text-align: center;
             color: var(--white);
             margin-bottom: var(--spacing-xl);
+            z-index: 1;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .landing-content h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: var(--spacing-md);
             font-weight: 700;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
         }
 
-        .landing-content p {
-            font-size: 1.25rem;
+        .landing-content .subtitle {
+            font-size: 1.5rem;
             opacity: 0.95;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 300;
+        }
+
+        .landing-content .tagline {
+            font-size: 1.125rem;
+            opacity: 0.85;
             max-width: 600px;
             margin: 0 auto;
         }
 
         .user-type-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--spacing-lg);
-            max-width: 800px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--spacing-xl);
+            max-width: 900px;
             width: 100%;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .user-type-card {
@@ -51,53 +138,127 @@
             padding: var(--spacing-xl);
             text-align: center;
             cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow-xl);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             text-decoration: none;
             color: var(--dark);
             border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-type-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .user-type-card:hover::before {
+            left: 100%;
         }
 
         .user-type-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border-color: var(--primary);
         }
 
         .user-type-icon {
-            font-size: 4rem;
+            font-size: 5rem;
             margin-bottom: var(--spacing-md);
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .user-type-card:hover .user-type-icon {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .user-type-card h2 {
-            font-size: 1.75rem;
+            font-size: 2rem;
             margin-bottom: var(--spacing-sm);
-            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
         }
 
         .user-type-card p {
             color: var(--gray-600);
-            font-size: 1rem;
+            font-size: 1.125rem;
             margin-bottom: var(--spacing-md);
+            line-height: 1.6;
+        }
+
+        .user-type-card .features {
+            list-style: none;
+            padding: 0;
+            margin: var(--spacing-md) 0;
+            text-align: left;
+        }
+
+        .user-type-card .features li {
+            padding: 0.5rem 0;
+            color: var(--gray-700);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-type-card .features li::before {
+            content: "✓";
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.25rem;
         }
 
         .user-type-card .btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: var(--white);
-            padding: var(--spacing-sm) var(--spacing-lg);
+            padding: var(--spacing-sm) var(--spacing-xl);
             border-radius: var(--radius-lg);
             font-weight: 600;
             display: inline-block;
-            margin-top: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s;
+        }
+
+        .user-type-card:hover .btn {
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .footer-text {
+            margin-top: var(--spacing-xl);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            z-index: 1;
         }
 
         @media (max-width: 768px) {
             .landing-content h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
+            }
+
+            .landing-content .subtitle {
+                font-size: 1.25rem;
             }
 
             .user-type-cards {
                 grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .user-type-icon {
+                font-size: 4rem;
             }
         }
     </style>
@@ -105,9 +266,15 @@
 
 <body>
     <div class="landing-container">
+        <!-- Animated Background -->
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+
         <div class="landing-content">
-            <h1>🍽️ Welcome to College Canteen</h1>
-            <p>Choose your access type to continue</p>
+            <h1>🍽️ College Canteen</h1>
+            <p class="subtitle">Management System</p>
+            <p class="tagline">Delicious food, seamless service</p>
         </div>
 
         <div class="user-type-cards">
@@ -115,7 +282,13 @@
             <a href="html/index.html" class="user-type-card">
                 <div class="user-type-icon">👨‍🎓</div>
                 <h2>Customer</h2>
-                <p>Browse menu, place orders, and view your bill</p>
+                <p>Order your favorite meals</p>
+                <ul class="features">
+                    <li>Browse menu items</li>
+                    <li>Add to cart</li>
+                    <li>Place orders</li>
+                    <li>View bill</li>
+                </ul>
                 <span class="btn">Browse Menu →</span>
             </a>
 
@@ -123,10 +296,18 @@
             <a href="html/admin-login.html" class="user-type-card">
                 <div class="user-type-icon">👨‍💼</div>
                 <h2>Staff / Admin</h2>
-                <p>Manage orders, menu items, and view reports</p>
+                <p>Manage canteen operations</p>
+                <ul class="features">
+                    <li>Manage orders</li>
+                    <li>Update menu items</li>
+                    <li>View sales reports</li>
+                    <li>Track analytics</li>
+                </ul>
                 <span class="btn">Staff Login →</span>
             </a>
         </div>
+
+        <p class="footer-text">© 2025 College Canteen Management System</p>
     </div>
 </body>
 
