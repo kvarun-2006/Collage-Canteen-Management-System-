@@ -38,9 +38,21 @@ function loadOrders() {
                 const orderDiv = document.createElement('div');
                 orderDiv.className = 'order-item';
                 orderDiv.id = `order-${order.orderId}`;
+
+                // Build items list
+                let itemsList = '';
+                if (order.items && order.items.length > 0) {
+                    itemsList = '<p><strong>Items:</strong></p><ul>';
+                    order.items.forEach(item => {
+                        itemsList += `<li>${item.name} x${item.quantity} (₹${item.price})</li>`;
+                    });
+                    itemsList += '</ul>';
+                }
+
                 orderDiv.innerHTML = `
                     <h3>Order #${order.orderId}</h3>
                     <p><strong>Customer:</strong> ${order.customerName}</p>
+                    ${itemsList}
                     <p><strong>Total:</strong> ₹${order.total}</p>
                     <p><strong>Time:</strong> ${new Date(order.time).toLocaleString()}</p>
                     <button onclick="viewBill(${order.orderId})" class="btn-primary">View Bill</button>

@@ -30,17 +30,44 @@ public class OrderServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        List<Order> orders = new ArrayList<>();
+        List<Map<String, Object>> ordersWithItems = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String sql = "SELECT * FROM orders ORDER BY time DESC";
+            // Get all pending orders
+            String sql = "SELECT * FROM orders WHERE status = 'pending' ORDER BY time DESC";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Order order = new Order(rs.getInt("order_id"), rs.getString("customer_name"),
-                        rs.getBigDecimal("total"), rs.getTimestamp("time"));
-                orders.add(order);
+                Map<String, Object> orderData = new HashMap<>();
+                int orderId = rs.getInt("order_id");
+
+                // Add order basic info
+                orderData.put("orderId", orderId);
+                orderData.put("customerName", rs.getString("customer_name"));
+                orderData.put("total", rs.getBigDecimal("total"));
+                orderData.put("time", rs.getTimestamp("time"));
+
+                // Get order items for this order
+                String itemsSql = "SELECT oi.quantity, oi.price, mi.name " +
+                        "FROM order_items oi " +
+                        "JOIN menu_items mi ON oi.item_id = mi.id " +
+                        "WHERE oi.order_id = ?";
+                PreparedStatement itemsStmt = conn.prepareStatement(itemsSql);
+                itemsStmt.setInt(1, orderId);
+                ResultSet itemsRs = itemsStmt.executeQuery();
+
+                List<Map<String, Object>> items = new ArrayList<>();
+                while (itemsRs.next()) {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("name", itemsRs.getString("name"));
+                    item.put("quantity", itemsRs.getInt("quantity"));
+                    item.put("price", itemsRs.getBigDecimal("price"));
+                    items.add(item);
+                }
+                orderData.put("items", items);
+
+                ordersWithItems.add(orderData);
             }
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -50,7 +77,7 @@ public class OrderServlet extends HttpServlet {
             return;
         }
 
-        response.getWriter().write(objectMapper.writeValueAsString(orders));
+        response.getWriter().write(objectMapper.writeValueAsString(ordersWithItems));
     }
 
     @Override
@@ -76,22 +103,16 @@ public class OrderServlet extends HttpServlet {
                 conn.setAutoCommit(false);
                 int orderId = Integer.parseInt(orderIdParam);
 
-                // Delete order items first (foreign key constraint)
-                String deleteItemsSql = "DELETE FROM order_items WHERE order_id = ?";
-                PreparedStatement deleteItemsStmt = conn.prepareStatement(deleteItemsSql);
-                deleteItemsStmt.setInt(1, orderId);
-                deleteItemsStmt.executeUpdate();
-
-                // Delete order
-                String deleteOrderSql = "DELETE FROM orders WHERE order_id = ?";
-                PreparedStatement deleteOrderStmt = conn.prepareStatement(deleteOrderSql);
-                deleteOrderStmt.setInt(1, orderId);
-                int rowsAffected = deleteOrderStmt.executeUpdate();
+                // Update order status to 'completed' instead of deleting
+                String updateOrderSql = "UPDATE orders SET status = 'completed' WHERE order_id = ?";
+                PreparedStatement updateOrderStmt = conn.prepareStatement(updateOrderSql);
+                updateOrderStmt.setInt(1, orderId);
+                int rowsAffected = updateOrderStmt.executeUpdate();
 
                 if (rowsAffected > 0) {
                     conn.commit();
                     result.put("success", true);
-                    result.put("message", "Order completed and removed successfully");
+                    result.put("message", "Order marked as completed");
                 } else {
                     conn.rollback();
                     result.put("success", false);

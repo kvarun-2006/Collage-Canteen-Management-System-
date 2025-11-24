@@ -1,5 +1,6 @@
 // Bill functionality
 document.addEventListener('DOMContentLoaded', function () {
+    setupBackButton();
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('orderId');
 
@@ -7,6 +8,22 @@ document.addEventListener('DOMContentLoaded', function () {
         loadBill(orderId);
     }
 });
+
+function setupBackButton() {
+    // Detect if user came from orders page or is a customer
+    const referrer = document.referrer;
+    const backBtn = document.getElementById('back-btn');
+
+    if (referrer.includes('orders.html')) {
+        // User came from orders page - go back to orders
+        backBtn.onclick = () => window.history.back();
+        backBtn.textContent = 'Back to Orders';
+    } else {
+        // Customer viewing their bill - go to menu
+        backBtn.onclick = () => window.location.href = 'index.html';
+        backBtn.textContent = 'Back to Menu';
+    }
+}
 
 function loadBill(orderId) {
     fetch(`/CanteenManagementSystem/bill?orderId=${orderId}`)
