@@ -132,7 +132,7 @@ CanteenManagementSystem/
 - **Landing Page** [http://localhost:8080/CanteenManagementSystem/welcome.html]
 
 ### Customer Side
-- **Main Menu** [http://localhost:8080/CanteenManagementSystem/html/index.html]
+- **Main Menu** http://localhost:8080/CanteenManagementSystem/html/index.html
 - **Shopping Cart** [http://localhost:8080/CanteenManagementSystem/html/cart.html]
 - **Order Bill** [http://localhost:8080/CanteenManagementSystem/html/bill.html?orderId=1]
 
