@@ -30,17 +30,44 @@ public class OrderServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        List<Order> orders = new ArrayList<>();
+        List<Map<String, Object>> ordersWithItems = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection()) {
+            // Get all pending orders
             String sql = "SELECT * FROM orders WHERE status = 'pending' ORDER BY time DESC";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Order order = new Order(rs.getInt("order_id"), rs.getString("customer_name"),
-                        rs.getBigDecimal("total"), rs.getTimestamp("time"));
-                orders.add(order);
+                Map<String, Object> orderData = new HashMap<>();
+                int orderId = rs.getInt("order_id");
+
+                // Add order basic info
+                orderData.put("orderId", orderId);
+                orderData.put("customerName", rs.getString("customer_name"));
+                orderData.put("total", rs.getBigDecimal("total"));
+                orderData.put("time", rs.getTimestamp("time"));
+
+                // Get order items for this order
+                String itemsSql = "SELECT oi.quantity, oi.price, mi.name " +
+                        "FROM order_items oi " +
+                        "JOIN menu_items mi ON oi.item_id = mi.id " +
+                        "WHERE oi.order_id = ?";
+                PreparedStatement itemsStmt = conn.prepareStatement(itemsSql);
+                itemsStmt.setInt(1, orderId);
+                ResultSet itemsRs = itemsStmt.executeQuery();
+
+                List<Map<String, Object>> items = new ArrayList<>();
+                while (itemsRs.next()) {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("name", itemsRs.getString("name"));
+                    item.put("quantity", itemsRs.getInt("quantity"));
+                    item.put("price", itemsRs.getBigDecimal("price"));
+                    items.add(item);
+                }
+                orderData.put("items", items);
+
+                ordersWithItems.add(orderData);
             }
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -50,7 +77,7 @@ public class OrderServlet extends HttpServlet {
             return;
         }
 
-        response.getWriter().write(objectMapper.writeValueAsString(orders));
+        response.getWriter().write(objectMapper.writeValueAsString(ordersWithItems));
     }
 
     @Override
