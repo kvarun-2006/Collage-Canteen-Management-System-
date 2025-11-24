@@ -51,8 +51,8 @@ public class ReportServlet extends HttpServlet {
             }
             report.put("totalEarningsToday", totalEarningsToday);
 
-            // List of all orders with timestamps
-            String allOrdersSql = "SELECT order_id, customer_name, total, time FROM orders ORDER BY time DESC";
+            // List of all orders with timestamps and status
+            String allOrdersSql = "SELECT order_id, customer_name, total, time, status FROM orders ORDER BY time DESC";
             PreparedStatement allOrdersStmt = conn.prepareStatement(allOrdersSql);
             ResultSet allOrdersRs = allOrdersStmt.executeQuery();
 
@@ -63,6 +63,7 @@ public class ReportServlet extends HttpServlet {
                 order.put("customerName", allOrdersRs.getString("customer_name"));
                 order.put("total", allOrdersRs.getBigDecimal("total"));
                 order.put("time", allOrdersRs.getTimestamp("time"));
+                order.put("status", allOrdersRs.getString("status") != null ? allOrdersRs.getString("status") : "pending");
                 orders.add(order);
             }
             report.put("orders", orders);
