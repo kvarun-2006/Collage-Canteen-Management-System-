@@ -33,7 +33,7 @@ public class OrderServlet extends HttpServlet {
         List<Order> orders = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String sql = "SELECT * FROM orders ORDER BY time DESC";
+            String sql = "SELECT * FROM orders WHERE status = 'pending' ORDER BY time DESC";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -76,22 +76,16 @@ public class OrderServlet extends HttpServlet {
                 conn.setAutoCommit(false);
                 int orderId = Integer.parseInt(orderIdParam);
 
-                // Delete order items first (foreign key constraint)
-                String deleteItemsSql = "DELETE FROM order_items WHERE order_id = ?";
-                PreparedStatement deleteItemsStmt = conn.prepareStatement(deleteItemsSql);
-                deleteItemsStmt.setInt(1, orderId);
-                deleteItemsStmt.executeUpdate();
-
-                // Delete order
-                String deleteOrderSql = "DELETE FROM orders WHERE order_id = ?";
-                PreparedStatement deleteOrderStmt = conn.prepareStatement(deleteOrderSql);
-                deleteOrderStmt.setInt(1, orderId);
-                int rowsAffected = deleteOrderStmt.executeUpdate();
+                // Update order status to 'completed' instead of deleting
+                String updateOrderSql = "UPDATE orders SET status = 'completed' WHERE order_id = ?";
+                PreparedStatement updateOrderStmt = conn.prepareStatement(updateOrderSql);
+                updateOrderStmt.setInt(1, orderId);
+                int rowsAffected = updateOrderStmt.executeUpdate();
 
                 if (rowsAffected > 0) {
                     conn.commit();
                     result.put("success", true);
-                    result.put("message", "Order completed and removed successfully");
+                    result.put("message", "Order marked as completed");
                 } else {
                     conn.rollback();
                     result.put("success", false);
