@@ -155,8 +155,8 @@ public class OrderServlet extends HttpServlet {
                 }
             }
 
-            // Insert order
-            String orderSql = "INSERT INTO orders (customer_name, total) VALUES (?, ?)";
+            // Insert order with status='pending'
+            String orderSql = "INSERT INTO orders (customer_name, total, status) VALUES (?, ?, 'pending')";
             PreparedStatement orderStmt = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
             orderStmt.setString(1, customerName);
             orderStmt.setBigDecimal(2, total);
