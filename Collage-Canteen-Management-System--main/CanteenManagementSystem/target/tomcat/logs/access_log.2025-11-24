@@ -1,5 +1,6 @@
-0:0:0:0:0:0:0:1 - - [24/Nov/2025:16:38:10 +0530] "GET /CanteenManagementSystem/html/orders.html?v=2 HTTP/1.1" 200 589 http-bio-8080-exec-2 55
-0:0:0:0:0:0:0:1 - - [24/Nov/2025:16:38:10 +0530] "GET /CanteenManagementSystem/js/orders.js?v=3 HTTP/1.1" 200 4662 http-bio-8080-exec-3 3
-0:0:0:0:0:0:0:1 - - [24/Nov/2025:16:38:10 +0530] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-5 0
-0:0:0:0:0:0:0:1 - - [24/Nov/2025:16:38:10 +0530] "GET /CanteenManagementSystem/login HTTP/1.1" 200 16 http-bio-8080-exec-4 248
-0:0:0:0:0:0:0:1 - - [24/Nov/2025:16:38:11 +0530] "GET /CanteenManagementSystem/order HTTP/1.1" 200 383 http-bio-8080-exec-1 937
+0:0:0:0:0:0:0:1 - - [24/Nov/2025:21:38:34 +0530] "GET /CanteenManagementSystem/html/index.html HTTP/1.1" 200 1192 http-bio-8080-exec-1 17
+0:0:0:0:0:0:0:1 - - [24/Nov/2025:21:38:34 +0530] "GET /CanteenManagementSystem/css/styles.css HTTP/1.1" 200 12420 http-bio-8080-exec-3 2
+0:0:0:0:0:0:0:1 - - [24/Nov/2025:21:38:34 +0530] "GET /CanteenManagementSystem/js/menu.js?v=2 HTTP/1.1" 200 3499 http-bio-8080-exec-2 2
+0:0:0:0:0:0:0:1 - - [24/Nov/2025:21:38:34 +0530] "GET /CanteenManagementSystem/js/cart.js?v=2 HTTP/1.1" 200 3960 http-bio-8080-exec-4 2
+0:0:0:0:0:0:0:1 - - [24/Nov/2025:21:38:34 +0530] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-5 0
+0:0:0:0:0:0:0:1 - - [24/Nov/2025:21:38:34 +0530] "GET /CanteenManagementSystem/menu HTTP/1.1" 200 195 http-bio-8080-exec-7 385

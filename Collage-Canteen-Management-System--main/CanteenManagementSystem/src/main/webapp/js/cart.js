@@ -130,3 +130,42 @@ function updateCartCount() {
     }
 }
 
+function showCartPreview() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const preview = document.getElementById('cart-preview');
+    
+    if (cart.length === 0) {
+        preview.innerHTML = '<div class="cart-preview-empty">Cart is empty</div>';
+    } else {
+        let total = 0;
+        let previewHTML = '<div class="cart-preview-items">';
+        
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            previewHTML += `
+                <div class="cart-preview-item">
+                    <span>${item.name} x${item.quantity}</span>
+                    <span>₹${itemTotal.toFixed(2)}</span>
+                </div>
+            `;
+        });
+        
+        previewHTML += `</div>
+            <div class="cart-preview-total">
+                <strong>Total: ₹${total.toFixed(2)}</strong>
+            </div>
+            <div class="cart-preview-hint">Click to view cart</div>
+        `;
+        
+        preview.innerHTML = previewHTML;
+    }
+    
+    preview.style.display = 'block';
+}
+
+function hideCartPreview() {
+    const preview = document.getElementById('cart-preview');
+    preview.style.display = 'none';
+}
+
