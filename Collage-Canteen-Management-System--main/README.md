@@ -128,18 +128,21 @@ CanteenManagementSystem/
 
 ## Application URLs
 
+### Main Entry Point
+- **Landing Page** [http://localhost:8080/CanteenManagementSystem/welcome.html]
+
 ### Customer Side
-- **Main Menu**: http://localhost:8080/CanteenManagementSystem/html/index.html
-- **Shopping Cart**: http://localhost:8080/CanteenManagementSystem/html/cart.html
-- **Order Bill**: http://localhost:8080/CanteenManagementSystem/html/bill.html?orderId=1
+- **Main Menu** [http://localhost:8080/CanteenManagementSystem/html/index.html]
+- **Shopping Cart** [http://localhost:8080/CanteenManagementSystem/html/cart.html]
+- **Order Bill** [http://localhost:8080/CanteenManagementSystem/html/bill.html?orderId=1]
 
 ### Admin/Staff Side
-- **Login Page**: http://localhost:8080/CanteenManagementSystem/html/admin-login.html
-- **Admin Dashboard**: http://localhost:8080/CanteenManagementSystem/html/admin-dashboard.html
-- **Staff Dashboard**: http://localhost:8080/CanteenManagementSystem/html/staff-dashboard.html
-- **Manage Menu**: http://localhost:8080/CanteenManagementSystem/html/manage-menu.html
-- **View Orders**: http://localhost:8080/CanteenManagementSystem/html/orders.html
-- **Sales Reports**: http://localhost:8080/CanteenManagementSystem/html/reports.html
+- **Login Page** [http://localhost:8080/CanteenManagementSystem/html/admin-login.html]
+- **Admin Dashboard** [http://localhost:8080/CanteenManagementSystem/html/admin-dashboard.html]
+- **Staff Dashboard** [http://localhost:8080/CanteenManagementSystem/html/staff-dashboard.html]
+- **Manage Menu** [http://localhost:8080/CanteenManagementSystem/html/manage-menu.html]
+- **View Orders** [http://localhost:8080/CanteenManagementSystem/html/orders.html]
+- **Sales Reports** [http://localhost:8080/CanteenManagementSystem/html/reports.html]
 
 ## Usage
 
