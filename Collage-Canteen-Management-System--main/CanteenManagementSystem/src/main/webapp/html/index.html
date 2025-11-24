@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canteen Management System - Menu</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
     <header>
         <h1>College Canteen Menu</h1>
-        <div class="cart-icon" onclick="showCart()">
-            Cart (<span id="cart-count">0</span>)
+        <div class="cart-icon" onclick="showCart()" onmouseenter="showCartPreview()" onmouseleave="hideCartPreview()">
+            🛒 Cart (<span id="cart-count">0</span>)
+            <div id="cart-preview" class="cart-preview">
+                <!-- Cart preview will be shown here -->
+            </div>
         </div>
     </header>
 
@@ -33,6 +38,7 @@
     </main>
 
     <script src="../js/menu.js?v=2"></script>
-    <script src="../js/cart.js?v=2"></script>
+    <script src="../js/cart.js?v=3"></script>
 </body>
+
 </html>
