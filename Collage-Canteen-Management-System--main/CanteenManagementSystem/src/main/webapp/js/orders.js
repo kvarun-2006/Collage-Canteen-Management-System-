@@ -68,7 +68,7 @@ function loadOrders() {
 }
 
 function viewBill(orderId) {
-    window.open(`bill.html?orderId=${orderId}`, '_blank');
+    window.location.href = `bill.html?orderId=${orderId}`;
 }
 
 function markAsCompleted(orderId) {

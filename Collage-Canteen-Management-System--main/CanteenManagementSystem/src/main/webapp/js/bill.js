@@ -16,7 +16,7 @@ function setupBackButton() {
 
     if (referrer.includes('orders.html')) {
         // User came from orders page - go back to orders
-        backBtn.onclick = () => window.history.back();
+        backBtn.onclick = () => window.location.href = 'orders.html?v=2';
         backBtn.textContent = 'Back to Orders';
     } else {
         // Customer viewing their bill - go to menu
