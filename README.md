@@ -115,6 +115,11 @@ CanteenManagementSystem/
    ```bash
    mvn clean package
    ```
+    # Navigate to project directory
+    cd c:\Study\Coding\Collage-Canteen-Management-System--main\CanteenManagementSystem
+
+    # Clean and run
+    mvn clean tomcat7:run
 2. Deploy the generated WAR file (`target/CanteenManagementSystem.war`) to Tomcat's `webapps` directory
 3. Start Tomcat server
 4. Access the application at: `http://localhost:8080/CanteenManagementSystem/`
