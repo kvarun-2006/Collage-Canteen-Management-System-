@@ -106,6 +106,8 @@ CanteenManagementSystem/
    ```bash
    mvn clean tomcat7:run
    ```
+    cd c:\Study\Coding\Collage-Canteen-Management-System--main\CanteenManagementSystem
+    mvn clean tomcat7:run
 4. Access the application at: `http://localhost:8080/CanteenManagementSystem/`
 
 **Alternative (WAR deployment):**
