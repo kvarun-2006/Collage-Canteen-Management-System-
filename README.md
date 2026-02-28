@@ -1,83 +1,86 @@
-Canteen Management System
-
-Video Demo:  https://youtu.be/SYkDIRStpiA
-
-Description:
-
+College Canteen Management System
+Video Demo: https://youtu.be/SYkDIRStpiA
 Project Overview
-The Canteen Management System is a robust, full-stack web application designed to digitize and streamline the food ordering process in a college canteen environment. In many educational institutions, canteen ordering remains a manual, paper-based process prone to errors, long wait times, and poor record-keeping. This project solves those issues by providing a centralized digital platform that caters to three distinct user personas: Customers (Students/Faculty), Canteen Staff, and Administrators.
+The College Canteen Management System is a comprehensive, full-stack web application developed to modernize food services at Sreenidhi University. In a fast-paced campus environment, manual ordering leads to bottlenecks and data inconsistency. This project provides a robust digital solution that facilitates seamless transactions between students, kitchen staff, and administrators.
 
-Built using the Model-View-Controller (MVC) architectural pattern, the application leverages Java Servlets and JSP for the backend, MySQL for persistent data storage, and a responsive frontend built with modern JavaScript and CSS. The goal was to create a system that is not only functional but also secure and scalable, moving beyond the simple Flask applications covered in the CS50 curriculum into the world of enterprise-grade Java development.
+By leveraging Java Servlets, JSP, and MySQL, the system moves beyond the introductory Python/Flask stack of CS50 to explore enterprise-grade development. The primary goal was to create a scalable architecture that maintains high performance under heavy peak-hour traffic while ensuring strict data integrity and security.
 
 Shutterstock
 
-Detailed File Breakdown
-1. The Controller Layer (Servlets)
-LoginServlet.java: This is the gateway to the administrative and staff interfaces. It handles POST requests from the login form, queries the database for credentials, and, most importantly, manages the HttpSession. By storing the user's role in the session, the app prevents unauthorized users from accessing sensitive management pages.
+Technical File Breakdown
+1. The Controller Layer (Backend Logic)
+DatabaseConnection.java: This utility class centralizes the JDBC connection logic. By using a singleton-inspired approach, it ensures the application doesn't exhaust database resources, which is critical for a high-traffic canteen environment.
 
-MenuServlet.java: Acts as the primary data provider for the menu. It handles two main tasks: serving the entire menu as a JSON array to the customer frontend (using GET) and processing administrative changes (using POST) such as adding new items or updating prices.
+LoginServlet.java: Beyond simple authentication, this servlet manages the HttpSession objects. It implements role-based logic that prevents a "Staff" user from accessing "Admin" reporting tools, ensuring a secure internal hierarchy.
 
-OrderServlet.java: This is the heart of the transaction logic. When a customer checkouts, this servlet processes the incoming cart data, generates a unique order ID, calculates the final total, and performs a multi-table SQL insertion to record both the order and the individual items within it.
+MenuServlet.java: This is a multi-functional controller. For customers, it serves menu data in JSON format to allow for asynchronous frontend rendering. For admins, it handles the backend logic for adding, editing, or deleting items from the database.
 
-BillServlet.java: A specialized controller that retrieves specific order details to generate a print-friendly receipt. It ensures that data is fetched accurately using the orderId passed via URL parameters.
+OrderServlet.java: This is the most complex component of the backend. It processes incoming cart arrays, performs multi-row insertions into the database, and manages transaction atomicity to ensure that an order is only recorded if all items are successfully processed.
 
-ReportServlet.java: Reserved for the Admin role, this servlet performs aggregate SQL queries (like SUM and COUNT) to provide high-level sales data for the dashboard.
+BillServlet.java & ReportServlet.java: These servlets handle data retrieval for specific outputs—one for generating customer receipts and the other for aggregating sales data into a dashboard view for administrators.
 
-2. The Model Layer (POJOs)
-User.java / MenuItem.java / Order.java / OrderItem.java: These are Plain Old Java Objects (POJOs) that represent our database entities within the Java environment. They allow for clean data passing between the database and the frontend without writing repetitive SQL in the middle of our business logic.
+2. The Model Layer (Data Structures)
+models/User.java: Encapsulates user credentials and role definitions.
 
-3. The Utility Layer
-DatabaseConnection.java: Instead of opening a new connection in every servlet, this utility class provides a centralized method to connect to the MySQL server. It handles the loading of the JDBC driver and manages the connection credentials securely.
+models/MenuItem.java: Defines the properties of food items, including name, price, and category.
 
-4. The Frontend (Webapp)
-index.html & menu.js: The customer interface. The JavaScript here uses the Fetch API to asynchronously load the menu. This ensures that the page doesn't blink or reload when a user browses different categories.
+models/Order.java & OrderItem.java: These classes represent the parent-child relationship in a transaction, where one order can contain many individual line items.
 
-cart.js: I implemented a client-side cart using localStorage. This design choice allows the user’s selected items to persist even if they accidentally close their browser or refresh the page.
+3. The View & Frontend Layer
+index.html & menu.js: The customer-facing storefront. I utilized the Fetch API to load items dynamically. This asynchronous approach was a key design choice to ensure the user experience feels like a modern mobile app rather than a traditional static website.
 
-styles.css: A comprehensive stylesheet that utilizes CSS Flexbox and Media Queries. This was essential to ensure that students can order easily from their mobile phones while standing in line, while staff can view the dashboard on a larger tablet or desktop.
+cart.js: I implemented a persistent shopping cart using Browser LocalStorage. This prevents data loss if a student refreshes their browser or loses connection while standing in line.
 
-Design Choices & Rationale
-Why Java Servlets over Python/Flask?
-While CS50 focuses heavily on Python and Flask, I chose to build this project using Java Servlets and JSP. I debated this choice early on but decided that the transition to a statically typed language would provide a better learning experience regarding how memory and data types are handled in a web context. Java’s strict structure made it easier to implement a formal MVC architecture, which is the industry standard for maintainable code.
+styles.css: Developed with a mobile-first mindset using CSS Flexbox. This ensures that the canteen staff can manage orders on a tablet while students order from their smartphones.
 
-The "Shopping Cart" Debate: Server vs. Client
-One of the major design hurdles was deciding where to store the shopping cart data before the order is placed.
+Detailed Design Choices
+The Choice of Java and MVC
+While Flask is excellent for rapid prototyping, I chose Java Servlets to gain experience with a statically typed, compiled language in a web context. The MVC (Model-View-Controller) pattern was strictly enforced to ensure that the "Business Logic" is entirely separate from the "UI Logic." This means if Sreenidhi University decided to change its frontend to a framework like React in the future, the backend Java Servlets and MySQL schema could remain almost entirely untouched.
 
-Option A (Database): Storing "pending" carts in the DB. I rejected this because it would lead to a cluttered database with abandoned carts from users who never finished their order.
+Database Normalization & Integrity
+I debated between a simple flat-file approach and a normalized relational database. I chose a Normalized MySQL Schema (3rd Normal Form). By splitting orders from order_items, I eliminated data redundancy. For example, if a price for a "Samosa" changes tomorrow, the historical records of past orders remain accurate because the price at the time of purchase is captured in the transaction tables.
 
-Option B (Server Session): Storing the cart in the HttpSession.
+Asynchronous Operations vs. Traditional Forms
+A major hurdle was the "Shopping Cart" flow. Traditional HTML forms would require a page reload every time a user added an item. I decided to build a custom JavaScript engine that manages the cart locally and only communicates with the server once—at the final checkout. This significantly reduces server load and provides the "instant" feedback users expect from modern web applications.
 
-Option C (Client LocalStorage): I chose Option C. By using localStorage, the server doesn't have to keep track of thousands of temporary cart objects, which saves memory. It also makes the UI feel much faster because adding an item to the cart is an instant JavaScript operation with no network latency.
+Security Protocols
+Preventing SQL Injection
+As taught in CS50, security cannot be an afterthought. Every database query in this system uses Prepared Statements. By parameterizing inputs, the system treats user data as literal values rather than executable code, effectively neutralizing SQL Injection attacks in the login and search fields.
 
-Database Normalization
-I spent significant time designing the database schema. I chose to split the order data into two tables: orders (for the date and total price) and order_items (for the specific quantities of each food item). This follows the Third Normal Form (3NF). Without this split, I would have had to store redundant information, which could lead to data inconsistency.
+Session & Role Validation
+The system doesn't just check if you are "logged in"; it checks "who" you are on every request. I implemented a filter-like logic in the Servlets that checks the HttpSession for an "Admin" attribute before allowing any changes to the menu or access to financial reports. This prevents "IDOR" (Insecure Direct Object Reference) vulnerabilities where a user might try to access a page by simply guessing the URL.
 
-Security Implementations
-In line with the security principles learned in CS50, I strictly avoided string concatenation in my SQL queries. Every single database interaction in this project uses Prepared Statements. This is my primary defense against SQL Injection, ensuring that malicious users cannot manipulate the database via the login or search forms.
-
-Setup Instructions
+Setup & Implementation Guide
 Prerequisites
-Java JDK 8+
+Java JDK 8 or higher
 
-Apache Tomcat 9.0
+Apache Tomcat 9.0 (for servlet deployment)
 
-MySQL Server
+MySQL 5.7+
 
-Maven
+Maven 3.6+ (for dependency management)
 
-Step 1: Database Setup
-Run the setup.sql script in your MySQL terminal:
+Installation Steps
+Clone the Project: Navigate to your local directory.
+
+Database Setup: Execute the setup.sql script to create the canteen_db and populate initial roles and menu items.
 
 SQL
-CREATE DATABASE canteen_db;
-USE canteen_db;
--- Run the rest of the script provided in the repository
-Step 2: Build and Run
-Navigate to the project folder and use the Maven wrapper:
+mysql -u root -p < setup.sql
+Build: Run mvn clean compile to download the MySQL Connector and other dependencies.
 
-Bash
-mvn clean tomcat7:run
-Open your browser to http://localhost:8080/CanteenManagementSystem/.
+Run: Use the command mvn clean tomcat7:run to start the local server.
+
+Access: Open http://localhost:8080/CanteenManagementSystem/ in your browser.
+
+Future Roadmap
+While the current version is fully functional, I have planned several enhancements to further improve the system:
+
+UPI Payment Integration: Allowing real-time digital payments at checkout.
+
+Email/SMS Notifications: Using an API to notify students when their food is ready for pickup.
+
+AI-Based Analytics: Leveraging my interest in AI and Data Science to predict busy hours and suggest inventory stock levels based on historical sales data.
 
 Conclusion
-This project was a journey in balancing user experience with backend stability. By implementing role-based access control and an asynchronous frontend, I have created a tool that feels modern and professional. The complexity of managing state across multiple users while maintaining database integrity has been the most challenging—and rewarding—part of my CS50 journey.
+This Canteen Management System represents the culmination of my journey through CS50 and my ongoing B.Tech studies. It is a practical application of computer science principles—from algorithmic efficiency in the cart logic to secure data management in the backend. I am proud to submit this as my final project.
