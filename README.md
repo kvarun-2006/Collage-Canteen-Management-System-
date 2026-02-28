@@ -1,237 +1,79 @@
-# Canteen Management System
+Canteen Management System
+Video Demo:  [Link to your YouTube or Streamable Video]
+Project Overview
+The Canteen Management System is a robust, full-stack web application designed to digitize and streamline the food ordering process in a college canteen environment. In many educational institutions, canteen ordering remains a manual, paper-based process prone to errors, long wait times, and poor record-keeping. This project solves those issues by providing a centralized digital platform that caters to three distinct user personas: Customers (Students/Faculty), Canteen Staff, and Administrators.
 
-A complete full-stack web application for managing a college canteen, supporting both customer and admin roles with separate interfaces.
+Built using the Model-View-Controller (MVC) architectural pattern, the application leverages Java Servlets and JSP for the backend, MySQL for persistent data storage, and a responsive frontend built with modern JavaScript and CSS. The goal was to create a system that is not only functional but also secure and scalable, moving beyond the simple Flask applications covered in the CS50 curriculum into the world of enterprise-grade Java development.
 
-## Features
+Shutterstock
 
-### Customer Interface:
-- Browse menu items with dynamic loading via AJAX
-- Add items to cart with quantity selection
-- View and manage cart (add, remove items)
-- Calculate total automatically
-- Place orders and generate bills
-- Responsive design for mobile devices
+Detailed File Breakdown
+1. The Controller Layer (Servlets)
+LoginServlet.java: This is the gateway to the administrative and staff interfaces. It handles POST requests from the login form, queries the database for credentials, and, most importantly, manages the HttpSession. By storing the user's role in the session, the app prevents unauthorized users from accessing sensitive management pages.
 
-### Admin Interface:
-- Secure login authentication with role-based access
-- Dashboard with navigation to different modules
-- Menu management: Add, edit, delete menu items
-- Order management: View all orders, mark as completed
-- Sales reports: Daily orders count and earnings
-- View detailed bills for each order
+MenuServlet.java: Acts as the primary data provider for the menu. It handles two main tasks: serving the entire menu as a JSON array to the customer frontend (using GET) and processing administrative changes (using POST) such as adding new items or updating prices.
 
-### Staff Interface:
-- Secure login authentication
-- Limited dashboard access
-- View orders only (no menu management or reports)
+OrderServlet.java: This is the heart of the transaction logic. When a customer checkouts, this servlet processes the incoming cart data, generates a unique order ID, calculates the final total, and performs a multi-table SQL insertion to record both the order and the individual items within it.
 
-## Technologies Used
+BillServlet.java: A specialized controller that retrieves specific order details to generate a print-friendly receipt. It ensures that data is fetched accurately using the orderId passed via URL parameters.
 
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Backend**: Java Servlets, JSP
-- **Database**: MySQL with JDBC
-- **Build Tool**: Maven
-- **Server**: Apache Tomcat
-- **Architecture**: MVC (Model-View-Controller)
+ReportServlet.java: Reserved for the Admin role, this servlet performs aggregate SQL queries (like SUM and COUNT) to provide high-level sales data for the dashboard.
 
-## Project Structure
+2. The Model Layer (POJOs)
+User.java / MenuItem.java / Order.java / OrderItem.java: These are Plain Old Java Objects (POJOs) that represent our database entities within the Java environment. They allow for clean data passing between the database and the frontend without writing repetitive SQL in the middle of our business logic.
 
-```
-CanteenManagementSystem/
-├── pom.xml                          # Maven configuration
-├── setup.sql                        # Database schema and sample data
-├── README.md                        # This documentation
-├── WEB-INF/
-│   └── web.xml                      # Servlet mappings and configuration
-└── src/
-    ├── models/                      # POJO classes
-    │   ├── User.java
-    │   ├── MenuItem.java
-    │   ├── Order.java
-    │   └── OrderItem.java
-    ├── servlets/                    # Servlet classes
-    │   ├── LoginServlet.java
-    │   ├── MenuServlet.java
-    │   ├── OrderServlet.java
-    │   ├── BillServlet.java
-    │   └── ReportServlet.java
-    └── utils/                       # Utility classes
-        └── DatabaseConnection.java
-└── webapp/
-    ├── html/                        # HTML pages
-    │   ├── index.html              # Customer menu page
-    │   ├── cart.html               # Customer cart page
-    │   ├── bill.html               # Bill/receipt page
-    │   ├── admin-login.html        # Admin/Staff login page
-    │   ├── admin-dashboard.html    # Admin dashboard
-    │   ├── staff-dashboard.html    # Staff dashboard
-    │   ├── manage-menu.html        # Menu management
-    │   ├── orders.html             # Order management
-    │   └── reports.html            # Sales reports
-    ├── css/
-    │   └── styles.css              # Application styles
-    └── js/                         # JavaScript files
-        ├── menu.js
-        ├── cart.js
-        ├── bill.js
-        ├── admin-login.js
-        ├── admin-dashboard.js
-        ├── staff-dashboard.js
-        ├── manage-menu.js
-        ├── orders.js
-        └── reports.js
-```
+3. The Utility Layer
+DatabaseConnection.java: Instead of opening a new connection in every servlet, this utility class provides a centralized method to connect to the MySQL server. It handles the loading of the JDBC driver and manages the connection credentials securely.
 
-## Setup Instructions
+4. The Frontend (Webapp)
+index.html & menu.js: The customer interface. The JavaScript here uses the Fetch API to asynchronously load the menu. This ensures that the page doesn't blink or reload when a user browses different categories.
 
-### Prerequisites
-- Java JDK 8 or higher
-- Apache Tomcat 9 or higher
-- MySQL Server 5.7 or higher
-- Maven 3.6 or higher
+cart.js: I implemented a client-side cart using localStorage. This design choice allows the user’s selected items to persist even if they accidentally close their browser or refresh the page.
 
-### Database Setup
-1. Start MySQL server
-2. Create a database named `canteen_db`
-3. Run the `setup.sql` script to create tables and insert sample data:
-   ```sql
-   mysql -u root -p canteen_db < setup.sql
-   ```
-   Or copy-paste the contents into MySQL Workbench/command line.
+styles.css: A comprehensive stylesheet that utilizes CSS Flexbox and Media Queries. This was essential to ensure that students can order easily from their mobile phones while standing in line, while staff can view the dashboard on a larger tablet or desktop.
 
-### Application Setup
-1. Clone or download the project
-2. Navigate to the project directory
-3. Run the application using Maven Tomcat plugin:
-   ```bash
-   mvn clean tomcat7:run
-   ```
-    cd c:\Study\Coding\Collage-Canteen-Management-System--main\CanteenManagementSystem
-    mvn clean tomcat7:run
-4. Access the application at: `http://localhost:8080/CanteenManagementSystem/`
+Design Choices & Rationale
+Why Java Servlets over Python/Flask?
+While CS50 focuses heavily on Python and Flask, I chose to build this project using Java Servlets and JSP. I debated this choice early on but decided that the transition to a statically typed language would provide a better learning experience regarding how memory and data types are handled in a web context. Java’s strict structure made it easier to implement a formal MVC architecture, which is the industry standard for maintainable code.
 
-**Alternative (WAR deployment):**
-1. Build the project:
-   ```bash
-   mvn clean package
-   ```
-    # Navigate to project directory
-    cd c:\Study\Coding\Collage-Canteen-Management-System--main\CanteenManagementSystem
+The "Shopping Cart" Debate: Server vs. Client
+One of the major design hurdles was deciding where to store the shopping cart data before the order is placed.
 
-    # Clean and run
-    mvn clean tomcat7:run
-2. Deploy the generated WAR file (`target/CanteenManagementSystem.war`) to Tomcat's `webapps` directory
-3. Start Tomcat server
-4. Access the application at: `http://localhost:8080/CanteenManagementSystem/`
+Option A (Database): Storing "pending" carts in the DB. I rejected this because it would lead to a cluttered database with abandoned carts from users who never finished their order.
 
-### Default Credentials
-**Admin:**
-- Username: `admin`
-- Password: `admin123`
+Option B (Server Session): Storing the cart in the HttpSession.
 
-**Staff:**
-- Username: `staff`
-- Password: `staff123`
+Option C (Client LocalStorage): I chose Option C. By using localStorage, the server doesn't have to keep track of thousands of temporary cart objects, which saves memory. It also makes the UI feel much faster because adding an item to the cart is an instant JavaScript operation with no network latency.
 
-## Application URLs
+Database Normalization
+I spent significant time designing the database schema. I chose to split the order data into two tables: orders (for the date and total price) and order_items (for the specific quantities of each food item). This follows the Third Normal Form (3NF). Without this split, I would have had to store redundant information, which could lead to data inconsistency.
 
-### Main Entry Point
-- **Landing Page** http://localhost:8080/CanteenManagementSystem/welcome.html
+Security Implementations
+In line with the security principles learned in CS50, I strictly avoided string concatenation in my SQL queries. Every single database interaction in this project uses Prepared Statements. This is my primary defense against SQL Injection, ensuring that malicious users cannot manipulate the database via the login or search forms.
 
-### Customer Side
-- **Main Menu** http://localhost:8080/CanteenManagementSystem/html/index.html
-- **Shopping Cart** http://localhost:8080/CanteenManagementSystem/html/cart.html
-- **Order Bill** http://localhost:8080/CanteenManagementSystem/html/bill.html?orderId=1
+Setup Instructions
+Prerequisites
+Java JDK 8+
 
-### Admin/Staff Side
-- **Login Page** http://localhost:8080/CanteenManagementSystem/html/admin-login.html
-- **Admin Dashboard** http://localhost:8080/CanteenManagementSystem/html/admin-dashboard.html
-- **Staff Dashboard** http://localhost:8080/CanteenManagementSystem/html/staff-dashboard.html
-- **Manage Menu** http://localhost:8080/CanteenManagementSystem/html/manage-menu.html
-- **View Orders** http://localhost:8080/CanteenManagementSystem/html/orders.html
-- **Sales Reports** http://localhost:8080/CanteenManagementSystem/html/reports.html
+Apache Tomcat 9.0
 
-## Usage
+MySQL Server
 
-### For Customers:
-1. Open the application in a web browser
-2. Browse the menu items
-3. Add items to cart with desired quantities
-4. Click on cart icon to view/manage cart
-5. Proceed to checkout, enter name, and place order
-6. View the generated bill/receipt
+Maven
 
-### For Admins:
-1. Go to admin login page (`admin-login.html`)
-2. Login with admin credentials
-3. Access dashboard with options for:
-   - Managing menu items (add/edit/delete)
-   - Viewing all orders
-   - Generating sales reports
+Step 1: Database Setup
+Run the setup.sql script in your MySQL terminal:
 
-### For Staff:
-1. Go to admin login page (`admin-login.html`)
-2. Login with staff credentials
-3. Access staff dashboard with limited options:
-   - View orders only
+SQL
+CREATE DATABASE canteen_db;
+USE canteen_db;
+-- Run the rest of the script provided in the repository
+Step 2: Build and Run
+Navigate to the project folder and use the Maven wrapper:
 
-## API Endpoints
+Bash
+mvn clean tomcat7:run
+Open your browser to http://localhost:8080/CanteenManagementSystem/.
 
-- `GET /menu` - Fetch all menu items (JSON)
-- `POST /menu` - CRUD operations on menu items
-- `GET /order` - Fetch all orders (JSON)
-- `POST /order` - Place new order
-- `GET /bill?orderId=X` - Get bill details for order X
-- `POST /login` - Admin/Staff authentication (returns JSON with redirect URL)
-- `GET /report` - Get sales report data
-
-## Sample Menu Items
-
-- Samosa: ₹20
-- Coffee: ₹25
-- Sandwich: ₹35
-- Juice: ₹30
-
-## Security Features
-
-- Prepared statements to prevent SQL injection
-- Session management for admin/staff authentication
-- Role-based access control (Admin vs Staff)
-- Input validation on client and server side
-
-## Responsive Design
-
-The application is designed to work on both desktop and mobile devices with a responsive CSS layout.
-
-## Future Enhancements
-
-- User registration and profiles
-- Order status tracking
-- Payment integration
-- Email notifications
-- Advanced reporting with charts
-- Inventory management
-- Additional staff permissions and roles
-
-## Troubleshooting
-
-### Common Issues:
-1. **Database Connection Error**: Ensure MySQL is running and credentials in `DatabaseConnection.java` are correct
-2. **Servlet Not Found**: Check that the WAR file is properly deployed and Tomcat is running
-3. **AJAX Requests Failing**: Ensure CORS is not blocking requests (though same-origin in this setup)
-4. **Build Errors**: Ensure all dependencies are downloaded via `mvn clean compile`
-
-### Logs:
-Check Tomcat logs in `logs/catalina.out` for server-side errors.
-Browser console for client-side JavaScript errors.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make changes and test thoroughly
-4. Submit a pull request
-
-## License
-
-This project is open source and available under the MIT License.
+Conclusion
+This project was a journey in balancing user experience with backend stability. By implementing role-based access control and an asynchronous frontend, I have created a tool that feels modern and professional. The complexity of managing state across multiple users while maintaining database integrity has been the most challenging—and rewarding—part of my CS50 journey.
