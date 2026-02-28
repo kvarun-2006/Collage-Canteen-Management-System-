@@ -1,5 +1,7 @@
 College Canteen Management System
+
 Video Demo: https://youtu.be/SYkDIRStpiA
+
 Project Overview
 The College Canteen Management System is a comprehensive, full-stack web application developed to modernize food services at Sreenidhi University. In a fast-paced campus environment, manual ordering leads to bottlenecks and data inconsistency. This project provides a robust digital solution that facilitates seamless transactions between students, kitchen staff, and administrators.
 
