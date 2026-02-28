@@ -1,0 +1,8 @@
+# Ignore heavy executables, binaries and zips
+apache-maven-*-bin/
+apache-tomcat-*/
+tomcat/
+*.zip
+
+# Ignore duplicate repositories
+Collage-Canteen-Management-System--main/
