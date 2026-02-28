@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canteen Management System - Cart</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Your Cart</h1>
+        <a href="index.html" class="btn-secondary">Back to Menu</a>
+    </header>
+
+    <main>
+        <div id="cart-container">
+            <div id="cart-items"></div>
+            <div class="cart-total">
+                <strong>Total: ₹<span id="cart-total">0</span></strong>
+            </div>
+            <div class="checkout-form">
+                <input type="text" id="customer-name" placeholder="Enter your name" required>
+                <button onclick="placeOrder()" class="btn-primary">Place Order</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/cart.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+To run the Canteen Management System, follow these steps:
+
+### Prerequisites
+- Java JDK 11+ installed.
+- MySQL Server installed and running.
+- Apache Tomcat 9 downloaded and extracted (already done in `tomcat/`).
+
+### 1. Set Up the Database
+- Start MySQL service.
+- Create database: `CREATE DATABASE canteen_db;`
+- Run the setup script: `mysql -u root -p canteen_db < setup.sql`
+- Update `src/main/java/com/canteen/utils/DatabaseConnection.java` with your MySQL URL, USER, PASSWORD.
+
+### 2. Deploy and Start the Application
+- The WAR file is already copied to `tomcat/apache-tomcat-9.0.96/webapps/CanteenManagementSystem-1.0-SNAPSHOT.war`.
+- Start Tomcat: Navigate to `tomcat/apache-tomcat-9.0.96/bin/` and run `startup.bat` (on Windows).
+- Wait for Tomcat to deploy the WAR (check logs in `tomcat/apache-tomcat-9.0.96/logs/catalina.out`).
+
+### 3. Access the Application
+- Open a web browser.
+- **Customer Menu**: Go to `http://localhost:8080/CanteenManagementSystem-1.0-SNAPSHOT/index.html`
+  - View menu items, add to cart, calculate total, place order, view bill.
+- **Admin Login**: Go to `http://localhost:8080/CanteenManagementSystem-1.0-SNAPSHOT/admin-login.html`
+  - Login with username `admin`, password `admin123`.
+  - Access dashboard for menu management, order viewing, and reports.
+
+### 4. Test the Workflow
+- As a customer: Browse menu, add items to cart, checkout, see bill.
+- As admin: Login, manage menu (add/edit/delete items), view orders, generate sales reports.
+
+The application uses AJAX for dynamic updates, localStorage for cart persistence, and prepared statements for database security. If issues occur, check Tomcat logs or ensure MySQL is running.
