@@ -1,6 +1,8 @@
 Canteen Management System
 
-Video Demo:  [Link to your YouTube or Streamable Video]
+Video Demo:  https://youtu.be/SYkDIRStpiA
+
+Description:
 
 Project Overview
 The Canteen Management System is a robust, full-stack web application designed to digitize and streamline the food ordering process in a college canteen environment. In many educational institutions, canteen ordering remains a manual, paper-based process prone to errors, long wait times, and poor record-keeping. This project solves those issues by providing a centralized digital platform that caters to three distinct user personas: Customers (Students/Faculty), Canteen Staff, and Administrators.
