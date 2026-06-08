@@ -1,0 +1,5 @@
+admin@example.com: [ADMIN in Hyderabad Tech Innovators] [ADMIN in Design Thinkers Club] [ADMIN in Indie Hackers Bangalore]
+test1@example.com: [MEMBER in Hyderabad Tech Innovators] [ADMIN in E2E Test Community]
+test2@example.com: [MEMBER in Hyderabad Tech Innovators] [MEMBER in E2E Test Community]
+applicant@example.com: [MEMBER in Design Thinkers Club]
+vr11112006@gmail.com: [MEMBER in Hyderabad Tech Innovators] [MEMBER in E2E Test Community]
